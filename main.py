@@ -31,7 +31,7 @@ def makeanaccount(username):
     cursor.execute(addacount)
 def viewcash(username):
     cursor.execute(f"SELECT total_money FROM bank_info where username = '{username}'")
-    return cursor.fetchall()[0][0]
+    return int(cursor.fetchall()[0][0].replace(",",""))
 
 name = input('Hello! Welcome to Oreo Bank. Please put your name: ')
 print(f'Hi {name}, nice to meet you!')
@@ -71,14 +71,17 @@ if Res == 'View Amount':
     print(money_amount)
 elif Res == 'Withdraw':
     withdraw = input('How much money would you like to withdraw?')
-    money_amount -= withdraw
-    (f"UPDATE bank_info SET total_money =  '{money_amount}' where username = '{username}'") 
+    money_amount -= int(float(withdraw))
+    cursor.execute(f"UPDATE bank_info SET total_money = '{str(money_amount)}' where username = '{username}'") 
+    print(money_amount)
 elif Res == 'Deposit':
     deposit = input('How much money would you like to deposit?')
-    money_amount += deposit
-    (f"UPDATE bank_info SET total_money =  '{money_amount}' where username = '{username}'")
+    money_amount += int(float(deposit)) 
+    print(f"UPDATE bank_info SET total_money = '{str(money_amount)}' where username = '{username}'")
+    cursor.execute(f"UPDATE bank_info SET total_money = '{str(money_amount)}' where username = '{username}'")
+    print(money_amount)
 
-
+connection.commit()
 cursor.close()
 
 connection.close()
